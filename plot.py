@@ -34,7 +34,7 @@ def plot(data, fformat, dim, fnum, xlim, ylim):
 		input('')
 		return
 	
-#	plt.cla()
+	plt.cla()
 	plt.title('num = ' + str(plot.count))
 	plt.xlim(-1*xlim, xlim)
 	plt.ylim(-1*ylim, ylim)
@@ -98,6 +98,7 @@ def main(argv):
 	fig = plt.figure()
 	ani = anim.FuncAnimation(fig, plot, interval=10, fargs=(fformat, dim, fnum, xlim, ylim))
 	plt.show()
+#	ani.save('output.gif', writer='imagemagick')
 	
 #	for i in range(0,fnum):
 #		fname = fformat % i

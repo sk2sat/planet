@@ -11,7 +11,7 @@ using namespace std;
 #define OUTPUT_INTERVAL	10
 
 int DIM		= 2;
-int nP		= 2;
+int nP		= 6;
 double DT	= 0.1;
 double endtime	= 10000.0;
 
@@ -41,19 +41,31 @@ int main(int argc, char **argv){
 	Vel[1*3+1]	= 2.0;
 	Mass[1]		= 0.001;
 	
-//	Pos[2*3+2]	= 250.0;
-//	Vel[2*3  ]	= -6;
-//	Mass[2]		= 5;
+	Pos[2*3  ]	= 200.0;
+	Pos[2*3+1]	= 250.0;
+	Vel[2*3  ]	= -6;
+	Mass[2]		= 5;
 	
-//	Pos[3*3+2]	= 400;
-//	Vel[3*3  ]	= -5;
-//	Mass[3]		= 5;
+	Pos[3*3  ]	= 300;
+	Pos[3*3+1]	= 400;
+	Vel[3*3  ]	= -5;
+	Mass[3]		= 5;
+	
+	Pos[4*3  ]	= -500;
+	Pos[4*3+1]	= 0;
+	Vel[4*3+1]	= -10;
+	Mass[4]		= 200;
+	
+	Pos[5*3  ]	= 250;
+	Pos[5*3+1]	= 0.0;
+	Vel[5*3+1]	= -10;
+	Mass[5]		= 500;	
 	
 	int i=0, j=0;
 	
 	while(1){
 		if(time >= endtime) break;
-		cout<<"time:"<<time<<endl;
+//		cout<<"time:"<<time<<endl;
 		if(i%OUTPUT_INTERVAL == 0){
 			save(j, time);
 			j++;
