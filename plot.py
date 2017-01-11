@@ -4,7 +4,7 @@ import sys
 import csv
 import six
 import numpy as np
-from   mpl_toolkits.mplot3d import Axes3D
+from   mpl_toolkits.mplot3d.axes3d import Axes3D
 import matplotlib.pyplot as plt
 import matplotlib.animation as anim
 
@@ -25,7 +25,7 @@ class Point(object):
 		self.y	= 0.0
 		self.z	= 0.0
 
-def plot(data, fformat, dim, fnum, xlim, ylim):
+def plot(data, fig, fformat, dim, fnum, xlim, ylim):
 	if plot.count == 1:
 		input('>>')
 	
@@ -46,25 +46,41 @@ def plot(data, fformat, dim, fnum, xlim, ylim):
 	nP   = int(file.readline())
 	
 	points = []
+	X = []
+	Y = []
+	Z = []
 	j = 0
 	for line in file:
-		points.append(Point())
+#		points.append(Point())
+		X.append(float)
+		Y.append(float)
+		Z.append(float)
 		itemlist = line[:-1].split(' ')
 		print(itemlist)
 		x = float(itemlist[0])
 		y = float(itemlist[1])
 		z = float(itemlist[2])
 		
-		points[j].x = x
-		points[j].y = y
-		points[j].z = z
+#		points[j].x = x
+#		points[j].y = y
+#		points[j].z = z
+		
+		X[j] = x
+		Y[j] = y
+		Z[j] = z
 		j += 1
 	
 	for i in range(0,nP):
 		if dim == 2:
-			plt.plot(points[i].x, points[i].y, 'o')
+#			plt.plot(points[i].x, points[i].y, 'o')
+			plt.plot(X, Y, 'o')
 		if dim == 3:
-			plt.plot(points[i].x, points[i].y, points[i].z, 'o')
+#			plt.plot(points[i].x, points[i].y, points[i].z, 'o')
+			ax = Axes3D(fig)
+			ax.set_xlim(-1000, 1000)
+			ax.set_ylim(-1000, 1000)
+			ax.set_zlim(-1000, 1000)
+			ax.scatter3D(X, Y, Z)
 	
 	plot.count += 1
 
@@ -93,10 +109,10 @@ def main(argv):
 	
 	print('dim = ' + str(dim))
 	
-	dim = 2
+#	dim = 2
 	
 	fig = plt.figure()
-	ani = anim.FuncAnimation(fig, plot, interval=10, fargs=(fformat, dim, fnum, xlim, ylim))
+	ani = anim.FuncAnimation(fig, plot, interval=10, fargs=(fig, fformat, dim, fnum, xlim, ylim))
 	plt.show()
 #	ani.save('output.gif', writer='imagemagick')
 	

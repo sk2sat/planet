@@ -17,6 +17,9 @@ run:
 	./$(TAR)
 
 plot:
+	./$(PLOT) 2 out%05d.prof 99999
+
+plot3:
 	./$(PLOT) 3 out%05d.prof 99999
 
 clean:
