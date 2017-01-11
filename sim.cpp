@@ -43,21 +43,25 @@ int main(int argc, char **argv){
 	
 	Pos[2*3  ]	= 200.0;
 	Pos[2*3+1]	= 250.0;
+	Pos[2*3+2]	= 10;
 	Vel[2*3  ]	= -6;
 	Mass[2]		= 5;
 	
 	Pos[3*3  ]	= 300;
 	Pos[3*3+1]	= 400;
+	Pos[3*3+2]	= 9;
 	Vel[3*3  ]	= -5;
 	Mass[3]		= 5;
 	
 	Pos[4*3  ]	= -500;
 	Pos[4*3+1]	= 0;
+	Pos[4*3+2]	= 11;
 	Vel[4*3+1]	= -10;
 	Mass[4]		= 200;
 	
 	Pos[5*3  ]	= 250;
 	Pos[5*3+1]	= 0.0;
+	Pos[5*3+2]	= 30;
 	Vel[5*3+1]	= -10;
 	Mass[5]		= 500;	
 	
@@ -124,7 +128,7 @@ void CalcAcc(){
 			if(m==0.0) continue;
 			r2 = 0.0;
 			for(int k=0;k<3;k++){
-				dp[k] = Pos[j*3+k] - p[k];//	cout<<dp[k]<<":"<<Pos[j*3+k]<<","<<p[k]<<":"<<k<<endl;
+				dp[k] = Pos[j*3+k] - p[k];
 				dp2[k]= pow(dp[k],2);
 				r2   += dp2[k];
 				if(dp[k] < 0.0){
@@ -135,21 +139,31 @@ void CalcAcc(){
 				
 			}
 			r  = sqrt(r2);
-			if(dp2[0] < 0.000001){
-				if(dp2[1] < 0.000001){
-//					if(dp2[2] < 0.000001){
-						cout<<"衝突:"<<i<<","<<j<<endl;
-//					}
-					
+			
+			bool xcol, ycol, zcol;
+			xcol = (dp2[0] < 0.000001);
+			ycol = (dp2[1] < 0.000001);
+			zcol = (dp2[2] < 0.000001);
+			
+			if(xcol && ycol && zcol){	// x & y & z
+				cout<<"衝突:"<<i<<","<<j<<endl;
+			}else if(xcol){
+				if(ycol){	// x & y
+					a[2] += m * c[2] / dp2[2];
+				}else if(zcol){	// x & z
+					a[1] += m * c[1] / dp2[1];
+				}else{
+					a[1] += m * c[1] / dp2[1];
+					a[2] += m * c[2] / dp2[2];
 				}
-				a[1] += m * c[1] / dp2[1];
-		//		a[2] += m * c[2] / dp2[2];
-			}else if(dp2[1] < 0.000001){
+			}else if(ycol){
+				if(zcol){	// y & z
+					a[0] += m * c[0] / dp2[0];
+				}
+				a[2] += m * c[2] / dp2[2];
+			}else if(zcol){
 				a[0] += m * c[0] / dp2[0];
-		//		a[2] += m * c[2] / dp2[2];
-//			}else if(dp2[2] < 0.000001){
-//				a[0] += m * c[0] / dp2[0];
-		//		a[1] += m * c[1] / dp2[1];
+				a[1] += m * c[1] / dp2[1];
 			}else{
 				double aa = (m / r2) / r;
 				for(int k=0;k<3;k++){

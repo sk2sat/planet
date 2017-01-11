@@ -50,7 +50,7 @@ def plot(data, fformat, dim, fnum, xlim, ylim):
 	for line in file:
 		points.append(Point())
 		itemlist = line[:-1].split(' ')
-#		print(itemlist)
+		print(itemlist)
 		x = float(itemlist[0])
 		y = float(itemlist[1])
 		z = float(itemlist[2])
