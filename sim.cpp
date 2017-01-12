@@ -9,6 +9,7 @@
 using namespace std;
 
 #define OUTPUT_INTERVAL	10
+#define OUTPUT_DIR	"out/"
 
 int DIM		= 2;
 int nP		= 6;
@@ -199,7 +200,7 @@ void save(int num, double time){
 	FILE *fp;
 //	ofstream ofs;
 	stringstream fname;
-	fname<<"out"<<setw(5)<<setfill('0')<<num<<".prof";
+	fname<<OUTPUT_DIR<<"out"<<setw(5)<<setfill('0')<<num<<".prof";
 	
 	cout<<"out: "<<fname.str()<<endl;
 	

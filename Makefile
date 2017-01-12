@@ -2,6 +2,10 @@ TAR	= sim
 PLOT	= plot.py
 OBJS	= sim.o
 
+PROF2POV= prof2pov
+FFORMAT	= out/out%05d.prof
+FNUM	= 99999
+
 CC	= g++
 CFLAGS	= --std=c++11 -g
 LDFLAGS	= -lm
@@ -17,12 +21,20 @@ run:
 	./$(TAR)
 
 plot:
-	./$(PLOT) 2 out%05d.prof 99999
+	./$(PLOT) 2 $(FFORMAT) $(FNUM)
 
 plot3:
-	./$(PLOT) 3 out%05d.prof 99999
+	./$(PLOT) 3 $(FFORMAT) $(FNUM)
+
+conv:$(PROF2POV)
+	./$< $(FFORMAT) $(FNUM)
 
 clean:
 	rm *.prof
 	rm *.o
 	rm $(TAR)
+
+$(PROF2POV):prof2pov.o
+	g++ -o $@ $^
+
+
