@@ -21,10 +21,16 @@ run:
 	./$(TAR)
 
 plot:
-	./$(PLOT) 2 $(FFORMAT) $(FNUM)
+	./$(PLOT) show 2 $(FFORMAT) $(FNUM)
 
 plot3:
-	./$(PLOT) 3 $(FFORMAT) $(FNUM)
+	./$(PLOT) show 3 $(FFORMAT) $(FNUM)
+
+plotgif2:
+	./$(PLOT) save 2 $(FFORMAT) $(FNUM)
+
+plotgif3:
+	./$(PLOT) save 3 $(FFORMAT) $(FNUM)
 
 conv:$(PROF2POV)
 	./$< $(FFORMAT) $(FNUM)
