@@ -1,0 +1,4 @@
+out/*.prof
+out/*.pov
+out/*.png
+*.o
