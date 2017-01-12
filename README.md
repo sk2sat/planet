@@ -14,3 +14,10 @@ make plot
 # 依存するライブラリ
 matplotlib, numpy (Python 3.5)
 
+# 動作画面
+
+2D
+![2D-SAMPLE]()
+
+3D
+![3D-SAMPLE](output_3d01.gif)
