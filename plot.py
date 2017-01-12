@@ -27,7 +27,8 @@ class Point(object):
 
 def plot(data, fig, fformat, dim, fnum, xlim, ylim):
 	if plot.count == 1:
-		input('>>')
+#		input('>>')
+		pass
 	
 	if plot.count > fnum:
 		print('plot end.')
@@ -56,7 +57,7 @@ def plot(data, fig, fformat, dim, fnum, xlim, ylim):
 		Y.append(float)
 		Z.append(float)
 		itemlist = line[:-1].split(' ')
-		print(itemlist)
+#		print(itemlist)
 		x = float(itemlist[0])
 		y = float(itemlist[1])
 		z = float(itemlist[2])
@@ -94,28 +95,41 @@ def main(argv):
 	
 	argc = len(argv)
 	if argc == 1 or argc == 2 or argc == 3 or argc > 6 :
-		print('usage> ./plot.py dim_number file_format file_number [xlim] [ylim]')
+		print('usage> ./plot.py mode(show/save)  dim file_format file_number [xlim] [ylim]')
 		return
 	
-	if argc == 5:
-		xlim = int(argv[4])
 	if argc == 6:
-		xlim = int(argv[4])
-		ylim = int(argv[5])
+		xlim = int(argv[5])
+	if argc == 7:
+		xlim = int(argv[5])
+		ylim = int(argv[6])
 	
-	dim = int(argv[1])
-	fformat = argv[2]
-	fnum = int(argv[3])
+	mode = argv[1]
+	dim = int(argv[2])
+	fformat = argv[3]
+	fnum = int(argv[4])
 	
+	print('mode : ' + mode)
 	print('dim = ' + str(dim))
 	
 #	dim = 2
+	frames = 20
 	
-	fig = plt.figure()
-	ani = anim.FuncAnimation(fig, plot, interval=10, fargs=(fig, fformat, dim, fnum, xlim, ylim))
-	plt.show()
-#	ani.save('output.gif', writer='imagemagick')
-	
+	i = 0
+	while True:
+		fig = plt.figure()
+		ani = anim.FuncAnimation(fig, plot, interval=10, fargs=(fig, fformat, dim, fnum, xlim, ylim), frames=frames)
+		if mode == 'show':
+			plt.show()
+		elif mode == 'save':
+			fname = 'output%05d.gif' % i
+			print('writing: ' + fname)
+			ani.save(fname, writer='imagemagick')
+		else:
+			print('invalid mode : ' + mode)
+			return -1
+		i += 1
+
 #	for i in range(0,fnum):
 #		fname = fformat % i
 #		print('loading : ' + fname)
