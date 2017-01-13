@@ -17,7 +17,7 @@ matplotlib, numpy (Python 3.5)
 # 動作画面
 
 2D
-![2D-SAMPLE]()
+![2D-SAMPLE](samples/2D/output_2d.gif)
 
 3D
-![3D-SAMPLE](output_3d01.gif)
+![3D-SAMPLE](samples/3D/test01/test01.gif)
