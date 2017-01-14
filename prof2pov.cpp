@@ -28,7 +28,7 @@ namespace CAM {
 
 void init(){
 	using namespace CAM;
-	pos[0] = 100.0;
+	pos[0] = 1000.0;
 	pos[1] = 100.0;
 	pos[2] = 100.0;
 	look[0]= 0.0;
