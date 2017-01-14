@@ -12,7 +12,7 @@ using namespace std;
 #define OUTPUT_DIR	"out/"
 
 int DIM		= 2;
-int nP		= 6;
+int nP		= 100;
 double DT	= 0.1;
 double endtime	= 10000.0;
 
@@ -66,6 +66,31 @@ int main(int argc, char **argv){
 	Vel[5*3+1]	= -10;
 	Mass[5]		= 500;	
 	
+	int r = 100;
+	int num = 6;
+
+loop:
+	for(int x=-50;x<50;x++){
+		int i = num;
+		if(i>nP) break;
+		for(int y=-50;y<50;y++){
+			for(int z=-50;z<50;z++){
+				if((x^2 + y^2 + z^2)==r^2){
+					Pos[i*3  ] = x;
+					Pos[i*3+1] = y;
+					Pos[i*3+2] = z;
+					Vel[i*3  ] = 0.1;
+					Vel[i*3+1] = 10.0;
+					Vel[i*3+2] = 10.0;
+					
+					Mass[i]	= 10;
+				}
+			}
+		}
+	}
+	num++;
+	if(num<nP) goto loop;
+	
 	int i=0, j=0;
 	
 	while(1){
@@ -83,10 +108,10 @@ int main(int argc, char **argv){
 	
 	cout<<"simulation end."<<endl;
 	
-	delete Acc;
-	delete Vel;
-	delete Pos;
-	delete Mass;
+	delete[] Acc;
+	delete[] Vel;
+	delete[] Pos;
+	delete[] Mass;
 }
 
 void init(){
@@ -216,7 +241,7 @@ void save(int num, double time){
 	for(int i=0;i<nP;i++){
 //		cout<< (float)Pos[i*3] << Pos[i*3+1] << Pos[i*3+2]<<endl;
 //		if(ofs.fail())	cout<<"fail!"<<endl;
-		fprintf(fp, "%f %f %f ", Pos[i*3], (float)Pos[i*3+1], (float)Pos[i*3+2]);
+		fprintf(fp, "%f %f %f ", (float)Pos[i*3], (float)Pos[i*3+1], (float)Pos[i*3+2]);
 		fprintf(fp, "%f %f %f ", (float)Vel[i*3], (float)Vel[i*3+1], (float)Vel[i*3+2]);
 		fprintf(fp, "%f ", 1.0);	//radius
 		fprintf(fp, "%d ", i);	//id
