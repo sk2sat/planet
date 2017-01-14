@@ -1,10 +1,12 @@
 
+#macro CAM(p, l, a)
 camera{
-	location <1000, 100, 100>
+	location p
 	sky	 <0, 0, 1>
-	look_at	 <0, 0, 0>
-	angle	 45
+	look_at	 l
+	angle	 a
 }
+#end
 
 light_source{
 	<2,3,5>

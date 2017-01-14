@@ -20,7 +20,26 @@ float SimTime;
 float *Pos, *Vel, *Rad, *Val;
 int *Id, *Typ;
 
+namespace CAM {
+	float pos[3];
+	float look[3];
+	float angle;
+};
+
+void init(){
+	using namespace CAM;
+	pos[0] = 100.0;
+	pos[1] = 100.0;
+	pos[2] = 100.0;
+	look[0]= 0.0;
+	look[1]= 0.0;
+	look[2]= 0.0;
+	angle = 45;
+}
+
 int main(int argc, char **argv){
+	init();
+	
 	switch(argc){
 	case 1:
 	case 2:
@@ -77,8 +96,13 @@ void prof2pov(FILE *fp, char *fmt, int num){
 	
 	fp = fopen(fname, "w");
 	
+	//include files
 	fprintf(fp, "#include \"setting.inc\"\n");
 	
+	//settings
+	fprintf(fp, "CAM(<%f,%f,%f>,<%f,%f,%f>,%f)\n", CAM::pos[0], CAM::pos[1], CAM::pos[2], CAM::look[0], CAM::look[1], CAM::look[2], CAM::angle);
+	
+	//output data
 	for(int i=0;i<nP;i++){
 		fprintf(fp, "SP(<%f,%f,%f>,%f)\n", Pos[i*3], Pos[i*3+1], Pos[i*3+2], Rad[i]);
 	}
