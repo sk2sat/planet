@@ -6,10 +6,19 @@
 using namespace std;
 
 void usage();
+void LoadProf(FILE *fp);
 void prof2pov(FILE *fp, char *fmt, int num);
+void Malloc(int nP);
+void Free();
 
 char* fformat;
 int fnum = 0;
+
+//prof
+int nP;
+float SimTime;
+float *Pos, *Vel, *Rad, *Val;
+int *Id, *Typ;
 
 int main(int argc, char **argv){
 	switch(argc){
@@ -38,6 +47,8 @@ int main(int argc, char **argv){
 			break;
 		}
 		
+		LoadProf(fp);
+		
 		char tmp[256];
 		strcpy(tmp, fformat);
 		char *p = tmp;
@@ -49,6 +60,8 @@ int main(int argc, char **argv){
 		prof2pov(fp, tmp, i);
 		
 		fclose(fp);
+		
+		Free();
 	}
 }
 
@@ -64,9 +77,43 @@ void prof2pov(FILE *fp, char *fmt, int num){
 	
 	fp = fopen(fname, "w");
 	
+	fprintf(fp, "#include \"setting.inc\"\n");
 	
+	for(int i=0;i<nP;i++){
+		fprintf(fp, "SP(<%f,%f,%f>,%f)\n", Pos[i*3], Pos[i*3+1], Pos[i*3+2], Rad[i]);
+	}
 	
 	fclose(fp);
+}
+
+void LoadProf(FILE *fp){
+	fscanf(fp, "%f", &SimTime);
+	fscanf(fp, "%d", &nP);
+	
+	Malloc(nP);
+	
+	for(int i=0;i<nP;i++){
+		fscanf(fp, "%f %f %f %f %f %f %f %d %d %f", &Pos[i*3], &Pos[i*3+1], &Pos[i*3+2], &Vel[i*3], &Vel[i*3+1], &Vel[i*3+2], &Rad[i], &Id[i], &Typ[i], &Vel[i]);
+	}
+}
+
+void Malloc(int nP){
+	Pos = new float[nP*3];
+	Vel = new float[nP*3];
+	Rad = new float[nP];
+	Val = new float[nP];
+	
+	Id  = new int[nP];
+	Typ = new int[nP];
+}
+
+void Free(){
+	delete Pos;
+	delete Vel;
+	delete Rad;
+	delete Val;
+	delete Id;
+	delete Typ;
 }
 
 
