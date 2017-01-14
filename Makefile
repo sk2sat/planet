@@ -41,7 +41,7 @@ conv:$(PROF2POV)
 	./$< $(PROFFMT) $(FNUM) +D
 
 render:
-	./$(RENDER) $(POVFMT) $(FNUM)
+	./$(RENDER) $(POVFMT) 0 $(FNUM)
 
 mp4:
 	$(FFMPEG) -r 30 -i $(PNGFMT) -vcodec libx264 -pix_fmt yuv420p -r 60 out.mp4
