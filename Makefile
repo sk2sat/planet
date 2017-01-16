@@ -10,10 +10,12 @@ PROFFMT	= $(FMT).prof
 POVFMT	= $(FMT).pov
 PNGFMT	= $(FMT).png
 FNUM	= 99999
+LUA_FILE= setting.lua
 
 CC	= g++
 CFLAGS	= --std=c++11 -g
-LDFLAGS	= -lm
+CFLAGS	= -I/usr/include/lua5.3/
+LDFLAGS	= -lm -L/usr/lib/ -llua5.3
 
 %.o:%.cpp
 	g++ -c $< $(CFLAGS)
@@ -38,7 +40,7 @@ plotgif3:
 	./$(PLOT) save 3 $(PROFFMT) $(FNUM)
 
 conv:$(PROF2POV)
-	./$< $(PROFFMT) $(FNUM) +D
+	./$< $(PROFFMT) $(FNUM) $(LUA_FILE)
 
 render:
 	./$(RENDER) $(POVFMT) 0 $(FNUM)
@@ -52,6 +54,6 @@ clean:
 	rm $(TAR)
 
 $(PROF2POV):prof2pov.o
-	g++ -o $@ $^
+	g++ -o $@ $^ $(LDFLAGS)
 
 

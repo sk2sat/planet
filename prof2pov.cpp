@@ -1,8 +1,14 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include <iostream>
 #include <string>
+
+#include <lua.hpp>
+
+#define POVRAY_INC_FILE	"stdpov.inc"
+
 using namespace std;
 
 void usage();
@@ -11,6 +17,7 @@ void prof2pov(FILE *fp, char *fmt, int num);
 void Malloc(int nP);
 void Free();
 
+lua_State *lua = NULL;
 char* fformat;
 int fnum = 0;
 
@@ -45,8 +52,21 @@ int main(int argc, char **argv){
 	case 2:
 		usage();
 		return -1;
+	case 3:	// lua無し
+		break;
+	case 4: // lua有り
+//		lua = lua_open();
+		lua = luaL_newstate();
+		luaL_openlibs(lua);
+		if(luaL_loadfile(lua, argv[3])){
+			fprintf(stderr, "can't load lua file:%s\n", argv[3]);
+			return -1;
+		}
+		
+		break;
 	default:
-//		usage();
+		usage();
+		return -1;
 		break;
 	}
 	
@@ -85,7 +105,7 @@ int main(int argc, char **argv){
 }
 
 void usage(){
-	printf("usage> ./prof2pov fileformat filenumber \n");
+	printf("usage> ./prof2pov fileformat filenumber [Lua_file] \n");
 }
 
 void prof2pov(FILE *fp, char *fmt, int num){
@@ -97,7 +117,33 @@ void prof2pov(FILE *fp, char *fmt, int num){
 	fp = fopen(fname, "w");
 	
 	//include files
-	fprintf(fp, "#include \"setting.inc\"\n");
+	fprintf(fp, "#include \"%s\"\n", POVRAY_INC_FILE);
+	
+	//load settings
+	if(lua != NULL){
+		lua_getglobal(lua, "setCamPos");
+		lua_pushnumber(lua, num);
+		if(lua_pcall(lua, 1, 3, 0)){
+			fprintf(stderr, "can't exec setCamPos(): %s\n", lua_tostring(lua, -1));
+			getchar();
+		}
+		
+		float x,y,z;
+		x = y = z = 0.0;
+		
+		if(lua_isnumber(lua, -1)){
+			x = lua_tonumber(lua, -1);
+		}
+		lua_pop(lua, 1);
+		if(lua_isnumber(lua, -1)){
+			y = lua_tonumber(lua, -1);
+		}
+		lua_pop(lua, 1);
+		if(lua_isnumber(lua, -1)){
+			z = lua_tonumber(lua, -1);
+		}
+		lua_pop(lua, 1);
+	}
 	
 	//settings
 	fprintf(fp, "CAM(<%f,%f,%f>,<%f,%f,%f>,%f)\n", CAM::pos[0], CAM::pos[1], CAM::pos[2], CAM::look[0], CAM::look[1], CAM::look[2], CAM::angle);
