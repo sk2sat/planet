@@ -10,7 +10,7 @@ PROFFMT	= $(FMT).prof
 POVFMT	= $(FMT).pov
 PNGFMT	= $(FMT).png
 FNUM	= 99999
-LUA_FILE= setting.lua
+#LUA_FILE= setting.lua
 
 CC	= g++
 CFLAGS	= --std=c++11 -g

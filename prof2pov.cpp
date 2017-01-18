@@ -36,8 +36,8 @@ namespace CAM {
 void init(){
 	using namespace CAM;
 	pos[0] = 1000.0;
-	pos[1] = 100.0;
-	pos[2] = 100.0;
+	pos[1] = 1000.0;
+	pos[2] = 10000.0;
 	look[0]= 0.0;
 	look[1]= 0.0;
 	look[2]= 0.0;
@@ -143,6 +143,10 @@ void prof2pov(FILE *fp, char *fmt, int num){
 			z = lua_tonumber(lua, -1);
 		}
 		lua_pop(lua, 1);
+		
+		CAM::pos[0] = x;
+		CAM::pos[1] = y;
+		CAM::pos[2] = z;
 	}
 	
 	//settings
