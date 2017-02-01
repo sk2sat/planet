@@ -7,12 +7,12 @@ simはシミュレーションプログラム(sim.cppをコンパイルしたも
 ```
 git clone https://github.com/asanotigaku/planet.git
 cd planet
-make run
-make plot
+mkdir out
+./autoexec.sh
 ```
 
 # 依存するライブラリ
-matplotlib, numpy (Python 3.5)
+plot.py: matplotlib, numpy (Python 3.5)
 
 # 動作画面
 
