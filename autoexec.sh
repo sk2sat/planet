@@ -1,6 +1,5 @@
 #!/bin/sh
 
-mkdir out
 make run
 make conv
 make render
