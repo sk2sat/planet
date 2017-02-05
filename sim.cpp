@@ -15,6 +15,7 @@ int DIM		= 2;
 int nP		= 9;
 double DT	= 0.01;
 double endtime	= 10000.0;
+const double G	= 6.67428 * pow(10, -11);
 
 double *Acc, *Vel, *Pos;
 double *Mass;
@@ -200,6 +201,7 @@ void CalcAcc(){
 		}
 		
 		for(int k=0;k<3;k++){
+			a[k] = a[k] * G;
 			Acc[i*3+k] = a[k];
 //			cout<<a[k];
 		}

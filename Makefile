@@ -10,6 +10,7 @@ PROFFMT	= $(FMT).prof
 POVFMT	= $(FMT).pov
 PNGFMT	= $(FMT).png
 FNUM	= 99999
+OUT_INTERVAL	= 10
 #LUA_FILE= setting.lua
 
 CC	= g++
@@ -43,10 +44,10 @@ conv:$(PROF2POV)
 	./$< $(PROFFMT) $(FNUM) $(LUA_FILE)
 
 render:
-	./$(RENDER) $(POVFMT) 0 $(FNUM)
+	./$(RENDER) $(POVFMT) 0 $(FNUM) $(OUT_INTERVAL)
 
 mp4:
-	$(FFMPEG) -r 30 -i $(PNGFMT) -vcodec libx264 -pix_fmt yuv420p -r 60 out.mp4
+	$(FFMPEG) -r 30 -i $(PNGFMT) -vcodec libx264 -pix_fmt yuv420p -r 60 out.mp4 > ffmpeg_status
 
 clean:
 	rm *.prof
