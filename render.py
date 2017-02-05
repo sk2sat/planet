@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
 
 import sys
+import os
 import subprocess
-import sksat
+#import sksat
 
 def usage():
 	print('usage> ./render.py fmt.pov startnum fnum')
 
 def main(argc, argv):
-	if argc != 4:
+	if argc != 5:
 		usage()
 		return
 	
@@ -25,7 +26,9 @@ def main(argc, argv):
 		subprocess.call(cmd, shell=True)
 		print('num:\r' + str(i))
 		if (i % out_interval) == 0:
-			sksat.report("reder:%d" % i)
+#			cmd = '~/python/slack/sksat_bot/post.py simulation \"' + 'render:' + str(i) + '\"'
+#			os.system(cmd)
+			pass
 
 if __name__ == '__main__':
 	argc = len(sys.argv)
