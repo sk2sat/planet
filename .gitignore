@@ -1,5 +1,7 @@
 out/*.prof
 out/*.pov
 out/*.png
+out/*
 *.o
 sksat.py
+nohup.out
