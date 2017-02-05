@@ -9,6 +9,7 @@
 using namespace std;
 
 #define OUTPUT_INTERVAL	10
+#define SLACK_INTERVAL	20
 #define OUTPUT_DIR	"out/"
 
 int DIM		= 2;
@@ -93,12 +94,22 @@ int main(int argc, char **argv){
 	Vel[8*3+1]	= -5.44;
 	
 	int i=0, j=0;
+	for(i=0;i<nP;i++){
+		Mass[i] = Mass[i] * (5.972 * pow(10,22));
+	}
+
+	i = 0;
 	
 	while(1){
 		if(time >= endtime) break;
 //		cout<<"time:"<<time<<endl;
 		if(i%OUTPUT_INTERVAL == 0){
 			save(j, time);
+			if(j%SLACK_INTERVAL){
+				char str[256];
+//				sprintf(str, "nohup ~/python/slack/sksat_bot/post.py simulation \"time:%lf save:%d\" &", time, j);
+//				system(str);
+			}
 			j++;
 		}
 		step();
