@@ -17,7 +17,7 @@ int DIM		= 2;
 int nP		= 9;
 double DT	= 0.01;
 double endtime	= 100000.0;
-const double G	= 6.67428;
+const double G	= 6.67428;	//gravity 
 
 double *Acc, *Vel, *Pos;
 double *Mass, *Rad;
