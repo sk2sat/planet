@@ -2,11 +2,13 @@ TAR	= sim
 PLOT	= plot.py
 OBJS	= sim.o
 
+PROF2VTK= ~/prof2vtk
 FFMPEG	= ffmpeg
 PROF2POV= prof2pov
 RENDER	= render.py
 FMT	= out/out%05d
 PROFFMT	= $(FMT).prof
+VTKFMT	= $(FMT).vtu
 POVFMT	= $(FMT).pov
 PNGFMT	= $(FMT).png
 FNUM	= 99999
@@ -40,11 +42,25 @@ plotgif2:
 plotgif3:
 	./$(PLOT) save 3 $(PROFFMT) $(FNUM)
 
+vtu:
+	$(PROF2VTK) $(PROFFMT) $(VTKFMT) $(FNUM)
+
+run-vtu:
+	make run
+	tweet "sim end."
+	make vtu
+	tweet "prof->vtu end."
+	tar zcvf vtu-data.tar.gz out/*.vtu
+	tweet "tar end."
+
 conv:$(PROF2POV)
 	./$< $(PROFFMT) $(FNUM) $(LUA_FILE)
 
 render:
 	./$(RENDER) $(POVFMT) 0 $(FNUM) $(OUT_INTERVAL)
+
+gif:
+	convert out/*.png anim.gif
 
 mp4:
 	$(FFMPEG) -r 30 -i $(PNGFMT) -vcodec libx264 -pix_fmt yuv420p -r 60 out.mp4 > ffmpeg_status
