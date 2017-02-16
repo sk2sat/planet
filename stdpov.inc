@@ -1,26 +1,34 @@
+global_settings {
+	assumed_gamma 1.0
+}
 
 #macro CAM(p, l, a)
 camera{
 	location p
-	sky	 <0, 0, 1>
-	look_at	 l
 	angle	 a
+//	right <-1.33,0,0>
+//	direction <0,1,0>
+	look_at l
 }
 #end
 
+#macro LIGHT_SRC(p, at)
 light_source{
-	<2,3,5>
-	color rgb 1.5 * <1,1,1>
+	p
+	color rgb <1,1,1>
 	parallel
-	point_at <0,0,0>
+	point_at at
 }
+#end
 
 #macro SP(p, r)
 sphere{
-	p, r*10
+	p, r
 	pigment {
 		rgbt <1,1,1,0>
 	}
 }
 #end
+
+//background {color rgb <0,0,1>}
 
