@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 
 #include <iostream>
 #include <string>
@@ -35,9 +36,9 @@ namespace CAM {
 
 void init(){
 	using namespace CAM;
-	pos[0] = 1000.0;
-	pos[1] = 1000.0;
-	pos[2] = 10000.0;
+	pos[0] = 0.0;
+	pos[1] = 0.0;
+	pos[2] = 3.0 * pow(10,8);
 	look[0]= 0.0;
 	look[1]= 0.0;
 	look[2]= 0.0;
@@ -150,6 +151,7 @@ void prof2pov(FILE *fp, char *fmt, int num){
 	}
 	
 	//settings
+	fprintf(fp, "LIGHT_SRC(<%f,%f,%f>,<%f,%f,%f>)\n", 100000.0, 0.0, 0.0, 0.0, 0.0, 0.0);
 	fprintf(fp, "CAM(<%f,%f,%f>,<%f,%f,%f>,%f)\n", CAM::pos[0], CAM::pos[1], CAM::pos[2], CAM::look[0], CAM::look[1], CAM::look[2], CAM::angle);
 	
 	//output data
