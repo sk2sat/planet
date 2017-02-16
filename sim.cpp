@@ -8,18 +8,19 @@
 #include <fstream>
 using namespace std;
 
-#define OUTPUT_INTERVAL	10
+#define OUTPUT_INTERVAL	300
 #define SLACK_INTERVAL	20
 #define OUTPUT_DIR	"out/"
+#define DEFAULT_RADIUS	pow(10, 5);
 
 int DIM		= 2;
 int nP		= 9;
 double DT	= 0.01;
-double endtime	= 10000.0;
-const double G	= 6.67428 * pow(10, -11);
+double endtime	= 100000.0;
+const double G	= 6.67428;
 
 double *Acc, *Vel, *Pos;
-double *Mass;
+double *Mass, *Rad;
 
 void init();
 void CalcAcc();
@@ -44,7 +45,7 @@ int main(int argc, char **argv){
 	
 	// 水星
 	Mass[1]		= 5.527;
-	Pos[1*3  ]	= 0.0;
+	Pos[1*3  ]	= 0.3871;
 	Pos[1*3+1]	= 0.0;
 	Pos[1*3+2]	= 0.0;
 	Vel[1*3  ]	= 0.0;
@@ -53,7 +54,7 @@ int main(int argc, char **argv){
 	
 	// 金星
 	Mass[2]		= 81.50;
-	Pos[2*3  ]	= 0.0;
+	Pos[2*3  ]	= 0.7233;
 	Pos[2*3+1]	= 0.0;
 	Pos[2*3+2]	= 0.0;
 	Vel[2*3  ]	= 0.0;
@@ -61,41 +62,46 @@ int main(int argc, char **argv){
 	
 	// 地球
 	Mass[3]		= 100;
-	Pos[3*3  ]	= 300;
-	Pos[3*3+1]	= 400;
-	Pos[3*3+2]	= 9;
+	Pos[3*3  ]	= 1.0;
+	Pos[3*3+1]	= 0.0;
+	Pos[3*3+2]	= 0.0;
 	Vel[3*3  ]	= 0.0;
 	Vel[3*3+1]	= -29.78;
 	
 	// 火星
 	Mass[4]		= 10.74;
-	Pos[4*3  ]	= 0.0;
+	Pos[4*3  ]	= 1.5237;
 	Pos[4*3+1]	= 0.0;
 	Pos[4*3+2]	= 0.0;
 	Vel[4*3+1]	= -24.08;
 	
 	// 木星
 	Mass[5]		= 31783.00;
-	Pos[5*3  ]	= 0.0;
-	Pos[5*3+1]	= 0.0;
-	Pos[5*3+2]	= 0.0;
+	Pos[5*3  ]	= 5.2026;
+	Pos[5*3+1]	= 0.01;
+	Pos[5*3+2]	= -0.01;
 	Vel[5*3+1]	= -13.06;
 	
 	// 土星
 	Mass[6]		= 9516.00;
+	Pos[6*3]	= 9.5549;
 	Vel[6*3+1]	= -9.65;
 	
 	// 天王星
 	Mass[7]		= 1451.00;
+	Pos[7*3]	= 19.2184;
 	Vel[7*3+1]	= -6.81;
 	
 	// 海王星
 	Mass[8]		= 1715.00;
+	Pos[8*3]	= 30.1104;
 	Vel[8*3+1]	= -5.44;
 	
 	int i=0, j=0;
 	for(i=0;i<nP;i++){
-		Mass[i] = Mass[i] * (5.972 * pow(10,22));
+		Mass[i] = Mass[i] * (5.972 * pow(10,-5));
+		Pos[i*3] *= 14959787.07;
+		Vel[i*3+1] *= 0.1;
 	}
 
 	i = 0;
@@ -124,6 +130,7 @@ int main(int argc, char **argv){
 	delete[] Vel;
 	delete[] Pos;
 	delete[] Mass;
+	delete[] Rad;
 }
 
 void init(){
@@ -132,9 +139,11 @@ void init(){
 	Pos = new double[nP*3];
 	
 	Mass= new double[nP];
+	Rad = new double[nP];
 	
 	for(int i=0;i<nP;i++){
 		Mass[i] = 0.0;
+		Rad[i]	= DEFAULT_RADIUS;
 		for(int j=0;j<3;j++){
 			Acc[i*3+j]	= 0.0;
 			Vel[i*3+j]	= 0.0;
@@ -197,8 +206,9 @@ void CalcAcc(){
 			}else if(ycol){
 				if(zcol){	// y & z
 					a[0] += m * c[0] / dp2[0];
+				}else{
+					a[2] += m * c[2] / dp2[2];
 				}
-				a[2] += m * c[2] / dp2[2];
 			}else if(zcol){
 				a[0] += m * c[0] / dp2[0];
 				a[1] += m * c[1] / dp2[1];
@@ -256,7 +266,7 @@ void save(int num, double time){
 //		if(ofs.fail())	cout<<"fail!"<<endl;
 		fprintf(fp, "%f %f %f ", (float)Pos[i*3], (float)Pos[i*3+1], (float)Pos[i*3+2]);
 		fprintf(fp, "%f %f %f ", (float)Vel[i*3], (float)Vel[i*3+1], (float)Vel[i*3+2]);
-		fprintf(fp, "%f ", 1.0);	//radius
+		fprintf(fp, "%lf ", Rad[i]);	//radius
 		fprintf(fp, "%d ", i);	//id
 		fprintf(fp, "%d ", 1);	//type
 		fprintf(fp, "%f\n", 1.0);//val
