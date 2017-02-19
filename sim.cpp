@@ -8,7 +8,7 @@
 #include <fstream>
 using namespace std;
 
-#define OUTPUT_INTERVAL	300
+#define OUTPUT_INTERVAL	5000
 #define SLACK_INTERVAL	20
 #define OUTPUT_DIR	"out/"
 #define DEFAULT_RADIUS	pow(10, 5);
@@ -16,8 +16,8 @@ using namespace std;
 int DIM		= 2;
 int nP		= 9;
 double DT	= 0.01;
-double endtime	= 100000.0;
-const double G	= 6.67428;	//gravity 
+double endtime	= 10000.0;
+const double G	= 667.428;	//gravity 
 
 double *Acc, *Vel, *Pos;
 double *Mass, *Rad;
@@ -33,6 +33,8 @@ int main(int argc, char **argv){
 	init();
 	
 	// とりあえず、質量は地球を100,速度はkm/sで設定(単位はあとでまとめて揃える)
+	
+	// PosはAUで設定
 	
 	// 太陽
 	Mass[0]		= 33294600.0;
@@ -90,6 +92,7 @@ int main(int argc, char **argv){
 	// 天王星
 	Mass[7]		= 1451.00;
 	Pos[7*3]	= 19.2184;
+	Pos[7*3+1]	= 0.01;
 	Vel[7*3+1]	= -6.81;
 	
 	// 海王星
@@ -101,7 +104,7 @@ int main(int argc, char **argv){
 	for(i=0;i<nP;i++){
 		Mass[i] = Mass[i] * (5.972 * pow(10,-5));
 		Pos[i*3] *= 14959787.07;
-		Vel[i*3+1] *= 0.1;
+		Vel[i*3+1] *= 0.00001;
 	}
 
 	i = 0;
