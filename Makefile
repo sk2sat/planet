@@ -2,6 +2,8 @@ TAR	= sim
 PLOT	= plot.py
 OBJS	= sim.o
 
+TWEET	= ~/python/twitter/tweet.py
+
 PROF2VTK= ~/prof2vtk
 FFMPEG	= ffmpeg
 PROF2POV= prof2pov
@@ -45,13 +47,16 @@ plotgif3:
 vtu:
 	$(PROF2VTK) $(PROFFMT) $(VTKFMT) $(FNUM)
 
+vtu-tar:
+	tar zcvf vtu-data.tar.gz out/*.vtu
+
 run-vtu:
 	make run
-	tweet "sim end."
+	$(TWEET) "sim end."
 	make vtu
-	tweet "prof->vtu end."
+	$(TWEET) "prof->vtu end."
 	tar zcvf vtu-data.tar.gz out/*.vtu
-	tweet "tar end."
+	$(TWEET) "tar end."
 
 conv:$(PROF2POV)
 	./$< $(PROFFMT) $(FNUM) $(LUA_FILE)

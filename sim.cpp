@@ -8,18 +8,24 @@
 #include <fstream>
 using namespace std;
 
-#define OUTPUT_INTERVAL	5000
+#define COL_DISTANCE	0.0000001
+
+#define OUTPUT_INTERVAL	1
 #define SLACK_INTERVAL	20
 #define OUTPUT_DIR	"out/"
 #define DEFAULT_RADIUS	pow(10, 5);
 
+#define EULAR
+//#define LEAP_FROG
+
 int DIM		= 2;
 int nP		= 9;
-double DT	= 0.01;
-double endtime	= 10000.0;
-const double G	= 667.428;	//gravity 
+double DT	= 0.000001;
+double endtime	= 100.0;
+const double G	= 6674.28;	//gravity 
 
 double *Acc, *Vel, *Pos;
+double *Vel_half;
 double *Mass, *Rad;
 
 void init();
@@ -61,6 +67,7 @@ int main(int argc, char **argv){
 	Pos[2*3+2]	= 0.0;
 	Vel[2*3  ]	= 0.0;
 	Vel[2*3+1]	= -35.02;
+	Vel[2*3+2]	= 0.0;
 	
 	// 地球
 	Mass[3]		= 100;
@@ -69,45 +76,65 @@ int main(int argc, char **argv){
 	Pos[3*3+2]	= 0.0;
 	Vel[3*3  ]	= 0.0;
 	Vel[3*3+1]	= -29.78;
+	Vel[3*3+2]	= 0.0;
 	
 	// 火星
 	Mass[4]		= 10.74;
 	Pos[4*3  ]	= 1.5237;
 	Pos[4*3+1]	= 0.0;
 	Pos[4*3+2]	= 0.0;
+	Vel[4*3  ]	= 0.0;
 	Vel[4*3+1]	= -24.08;
+	Vel[4*3+2]	= 0.0;
 	
 	// 木星
 	Mass[5]		= 31783.00;
 	Pos[5*3  ]	= 5.2026;
-	Pos[5*3+1]	= 0.01;
-	Pos[5*3+2]	= -0.01;
+//	Pos[5*3+1]	= 0.01;
+//	Pos[5*3+2]	= -0.01;
+	Vel[5*3  ]	= 0.0;
 	Vel[5*3+1]	= -13.06;
+	Vel[5*3+2]	= 0.0;
 	
 	// 土星
 	Mass[6]		= 9516.00;
 	Pos[6*3]	= 9.5549;
+//	Pos[6*3+1]	= 0.001;
+//	Pos[6*3+2]	= 0.001;
+	Vel[6*3  ]	= 0.0;
 	Vel[6*3+1]	= -9.65;
+	Vel[6*3+2]	= 0.0;
 	
 	// 天王星
 	Mass[7]		= 1451.00;
 	Pos[7*3]	= 19.2184;
-	Pos[7*3+1]	= 0.01;
+//	Pos[7*3+1]	= 0.01;
+//	Pos[7*3+2]	= 0.01;
+	Vel[7*3  ]	= 0.0;
 	Vel[7*3+1]	= -6.81;
+	Vel[7*3+2]	= 0.0;
 	
 	// 海王星
 	Mass[8]		= 1715.00;
 	Pos[8*3]	= 30.1104;
+//	Pos[8*3+1]	= 0.0001;
+//	Pos[8*3+2]	= 0.0001;
+	Vel[8*3  ]	= 0.0;
 	Vel[8*3+1]	= -5.44;
+	Vel[8*3+2]	= 0.0;
 	
 	int i=0, j=0;
 	for(i=0;i<nP;i++){
-		Mass[i] = Mass[i] * (5.972 * pow(10,-5));
-		Pos[i*3] *= 14959787.07;
-		Vel[i*3+1] *= 0.00001;
+		Mass[i] = Mass[i] * 59720 * 0.01;
+		Pos[i*3] = Pos[i*3] * 14959.78707;
+		Vel[i*3+1] *= 1000;
+		
+		cout<<"Mass:"<<Mass[i]<<" Pos:"<<Pos[i*3]<<endl;
 	}
+	getchar();
 
 	i = 0;
+	j = 0;
 	
 	while(1){
 		if(time >= endtime) break;
@@ -131,6 +158,7 @@ int main(int argc, char **argv){
 	
 	delete[] Acc;
 	delete[] Vel;
+	delete[] Vel_half;
 	delete[] Pos;
 	delete[] Mass;
 	delete[] Rad;
@@ -139,6 +167,7 @@ int main(int argc, char **argv){
 void init(){
 	Acc = new double[nP*3];
 	Vel = new double[nP*3];
+	Vel_half = new double[nP*3];
 	Pos = new double[nP*3];
 	
 	Mass= new double[nP];
@@ -150,7 +179,7 @@ void init(){
 		for(int j=0;j<3;j++){
 			Acc[i*3+j]	= 0.0;
 			Vel[i*3+j]	= 0.0;
-			Pos[i*3+j]	= 300.7;
+			Pos[i*3+j]	= 0.0;
 		}
 	}
 }
@@ -190,10 +219,10 @@ void CalcAcc(){
 			}
 			r  = sqrt(r2);
 			
-			bool xcol, ycol, zcol;
-			xcol = (dp2[0] < 0.000001);
-			ycol = (dp2[1] < 0.000001);
-			zcol = (dp2[2] < 0.000001);
+			bool xcol=0, ycol=0, zcol=0;
+			xcol = (dp2[0] < COL_DISTANCE);
+			ycol = (dp2[1] < COL_DISTANCE);
+			zcol = (dp2[2] < COL_DISTANCE);
 			
 			if(xcol && ycol && zcol){	// x & y & z
 				cout<<"衝突:"<<i<<","<<j<<endl;
@@ -210,6 +239,7 @@ void CalcAcc(){
 				if(zcol){	// y & z
 					a[0] += m * c[0] / dp2[0];
 				}else{
+					a[0] += m * c[0] / dp2[0];
 					a[2] += m * c[2] / dp2[2];
 				}
 			}else if(zcol){
@@ -227,23 +257,49 @@ void CalcAcc(){
 		for(int k=0;k<3;k++){
 			a[k] = a[k] * G;
 			Acc[i*3+k] = a[k];
-//			cout<<a[k];
+			cout<<a[k]<<endl;
 		}
 		
 	}
 }
 
+int step_num = 0;
+
 void step(){
+//	if(step_num == 0) CalcAcc();
+	step_num++;
 	for(int i=0;i<nP;i++){
-		CalcAcc();
-		
+#ifdef EULAR
 		Vel[i*3  ] += Acc[i*3  ] * DT;
 		Vel[i*3+1] += Acc[i*3+1] * DT;
 		Vel[i*3+2] += Acc[i*3+2] * DT;
-		
+
 		Pos[i*3  ] += Vel[i*3  ] * DT;
 		Pos[i*3+1] += Vel[i*3+1] * DT;
 		Pos[i*3+2] += Vel[i*3+2] * DT;
+		
+		CalcAcc();
+#endif
+
+#ifdef LEAP_FROG
+
+		double vh[3];
+		for(int j=0;j<3;j++){
+			if(step_num == 1){
+				vh[j] = Vel[i*3+j] + (Acc[i*3+j] * 0.5);
+			}else{
+				vh[j]   = Vel_half[i*3+j] + (Acc[i*3+j] * DT);
+			}
+			Pos[i*3+j] += vh[j] * DT;
+			Vel_half[i*3+j] = vh[j];
+		}
+	}
+	CalcAcc();
+	for(int i=0;i<nP;i++){
+		for(int j=0;j<3;j++){
+			Vel[i*3+j]  = Vel_half[i*3+j] + (Acc[i*3+j] * DT * 0.5);
+		}
+#endif
 	}
 }
 
