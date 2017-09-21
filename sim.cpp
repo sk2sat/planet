@@ -19,7 +19,7 @@ using namespace std;
 //#define LEAP_FROG
 
 int DIM		= 2;
-int nP		= 9;
+int nP		= 2;
 double DT	= 0.000001;
 double endtime	= 100.0;
 const double G	= 6674.28;	//gravity 
@@ -50,7 +50,7 @@ int main(int argc, char **argv){
 	Vel[0*3  ]	= 0.0;
 	Vel[0*3+1]	= 0.0;
 	Vel[0*3+2]	= 0.0;
-	
+/*	
 	// 水星
 	Mass[1]		= 5.527;
 	Pos[1*3  ]	= 0.3871;
@@ -86,16 +86,16 @@ int main(int argc, char **argv){
 	Vel[4*3  ]	= 0.0;
 	Vel[4*3+1]	= -24.08;
 	Vel[4*3+2]	= 0.0;
-	
+*/	
 	// 木星
-	Mass[5]		= 31783.00;
-	Pos[5*3  ]	= 5.2026;
-//	Pos[5*3+1]	= 0.01;
-//	Pos[5*3+2]	= -0.01;
-	Vel[5*3  ]	= 0.0;
-	Vel[5*3+1]	= -13.06;
-	Vel[5*3+2]	= 0.0;
-	
+	Mass[1]		= 31783.00;
+	Pos[1*3  ]	= 5.2026;
+//	Pos[1*3+1]	= 0.01;
+//	Pos[1*3+2]	= -0.01;
+	Vel[1*3  ]	= 0.0;
+	Vel[1*3+1]	= -13.06;
+	Vel[1*3+2]	= 0.0;
+/*	
 	// 土星
 	Mass[6]		= 9516.00;
 	Pos[6*3]	= 9.5549;
@@ -122,7 +122,7 @@ int main(int argc, char **argv){
 	Vel[8*3  ]	= 0.0;
 	Vel[8*3+1]	= -5.44;
 	Vel[8*3+2]	= 0.0;
-	
+*/	
 	int i=0, j=0;
 	for(i=0;i<nP;i++){
 		Mass[i] = Mass[i] * 59720 * 0.01;
